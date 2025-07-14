@@ -1,0 +1,9 @@
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser en powershell
+
+
+.\.venv\Scripts\activate   en el terminal de vscode
+
+
+
+# Para revertir la política (opcional) y dejarlo seguro
+Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser

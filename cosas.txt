@@ -1,0 +1,21 @@
+
+
+try:
+
+    CONNECTION_STRING = "mongodb+srv://esteban:Earg241690@cluster0.8y7ebgm.mongodb.net/"
+    client = MongoClient(CONNECTION_STRING)
+
+    db = client.Libreria
+    print("Conexión exitosa a MongoDB!")
+
+    # listar las bases de datos para confirmar
+    print("Bases de datos disponibles:", client.list_database_names())
+
+except Exception as e:
+    print(f"Error al conectar o interactuar con MongoDB: {e}")
+
+finally:
+    # 4. Cerrar la conexión
+    if 'client' in locals() and client:
+        client.close()
+        print("\nConexión a MongoDB cerrada.")
