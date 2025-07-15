@@ -175,7 +175,9 @@ def registrar_usuario():
 
 
 def listar_usuarios():
-    pass
+    print("Listando usuarios")
+    dao = UsuarioDAO()
+    dao.listarUsuarios()
    
 
 # --- Funciones para el Carrito de Compras ---
