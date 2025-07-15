@@ -2,217 +2,82 @@
 # Inacap Ingenieria en informatica - Vespertino
 # Programación Orientada a Objeto Seguro (TI3V21/V-IEI-N2-P3-C1/V Puente Alto IEI)
 
-from Controller.HabitacionDAO import HabitacionDAO
-from Controller.libroDAO import libroDAO
-from Controller.TipoHabitacionDAO import TipoHabitacionDAO
+from Controller.LibrosDAO import LibroDAO
+from Controller.UserDAO import UsuarioDAO
 
 
 def iniciarAplicacion():
 
     opcion = 0
 
-    while opcion != 16:
-
-        try:  
-                # --- Base de Datos (simulada con listas) ---
-libros = []
-usuarios = []
-carrito = {} # Usaremos un diccionario para el carrito: {id_usuario: [lista_de_libros_en_carrito]}
+    while opcion != 10:
+        pass
 
 # --- Funciones CRUD para Libros ---
 
 def registrar_libro():
-    """Permite registrar un nuevo libro con sus características."""
-    print("\n--- REGISTRAR LIBRO ---")
-    titulo = input("Título: ").strip()
-    autor = input("Autor: ").strip()
-    genero = input("Género: ").strip()
-    precio = float(input("Precio: "))
-    stock = int(input("Stock: "))
-    
-    libro = {
-        "id": len(libros) + 1, # ID autoincremental simple
-        "titulo": titulo,
-        "autor": autor,
-        "genero": genero,
-        "precio": precio,
-        "stock": stock
-    }
-    libros.append(libro)
-    print(f"Libro '{titulo}' registrado con éxito. ID: {libro['id']}")
+    print("Registrar libro")
+    dao = LibroDAO()
+
+    id = int(input("Ingrese el id: "))
+    nombre = str(input("Ingrese el nombre del libro: "))
+    precio = float(input("Ingrese el precio: $"))
+    genero = str(input("Ingrese el genero del libro: "))
+    tipo_tapa = str(input("Ingrese el tipo de tapa: "))
+    paginas = int(input("Ingrese la cantidad de paginas: "))
+    autor = str(input("Ingrese el nombre del autor: "))
+    stock = int(input("Ingrese la cantidad: "))
+
+    dao.agregarLibro(id, nombre, precio, genero, tipo_tapa, paginas, autor, stock)
+
+
 
 def listar_libros():
-    """Muestra todos los libros disponibles."""
-    print("\n--- LISTADO DE LIBROS ---")
-    if not libros:
-        print("No hay libros registrados.")
-        return
-    
-    for libro in libros:
-        print(f"ID: {libro['id']} | Título: {libro['titulo']} | Autor: {libro['autor']} | Género: {libro['genero']} | Precio: ${libro['precio']:.2f} | Stock: {libro['stock']}")
+    pass
+
 
 def buscar_libro():
-    """Permite buscar libros por título o autor."""
-    print("\n--- BUSCAR LIBRO ---")
-    criterio = input("Buscar por (titulo/autor): ").lower().strip()
-    valor = input(f"Ingrese el {criterio} a buscar: ").strip().lower()
-    
-    resultados = []
-    for libro in libros:
-        if criterio == "titulo" and valor in libro["titulo"].lower():
-            resultados.append(libro)
-        elif criterio == "autor" and valor in libro["autor"].lower():
-            resultados.append(libro)
-            
-    if not resultados:
-        print("No se encontraron libros con ese criterio.")
-    else:
-        print("\n--- RESULTADOS DE BÚSQUEDA ---")
-        for libro in resultados:
-            print(f"ID: {libro['id']} | Título: {libro['titulo']} | Autor: {libro['autor']} | Género: {libro['genero']} | Precio: ${libro['precio']:.2f} | Stock: {libro['stock']}")
+    pass
+
 
 def actualizar_libro():
-    """Permite actualizar la información de un libro existente."""
-    print("\n--- ACTUALIZAR LIBRO ---")
-    libro_id = int(input("Ingrese el ID del libro a actualizar: "))
-    
-    for libro in libros:
-        if libro["id"] == libro_id:
-            print(f"Editando libro: {libro['titulo']}")
-            libro["titulo"] = input(f"Nuevo título ({libro['titulo']}): ") or libro["titulo"]
-            libro["autor"] = input(f"Nuevo autor ({libro['autor']}): ") or libro["autor"]
-            libro["genero"] = input(f"Nuevo género ({libro['genero']}): ") or libro["genero"]
-            
-            nuevo_precio = input(f"Nuevo precio ({libro['precio']}): ")
-            if nuevo_precio:
-                libro["precio"] = float(nuevo_precio)
-                
-            nuevo_stock = input(f"Nuevo stock ({libro['stock']}): ")
-            if nuevo_stock:
-                libro["stock"] = int(nuevo_stock)
-                
-            print("Libro actualizado con éxito.")
-            return
-    print("Libro no encontrado.")
-
+    pass
+   
 def eliminar_libro():
-    """Permite eliminar un libro por su ID."""
-    print("\n--- ELIMINAR LIBRO ---")
-    libro_id = int(input("Ingrese el ID del libro a eliminar: "))
-    
-    for i, libro in enumerate(libros):
-        if libro["id"] == libro_id:
-            del libros[i]
-            print(f"Libro con ID {libro_id} eliminado con éxito.")
-            return
-    print("Libro no encontrado.")
-
-# --- Funciones CRUD para Usuarios ---
+    pass
 
 def registrar_usuario():
-    """Permite registrar un nuevo usuario."""
-    print("\n--- REGISTRAR USUARIO ---")
-    nombre_usuario = input("Nombre de usuario: ").strip()
-    contrasena = input("Contraseña: ").strip()
-    
-    usuario = {
-        "id": len(usuarios) + 1, # ID autoincremental simple
-        "nombre_usuario": nombre_usuario,
-        "contrasena": contrasena # En un sistema real, la contraseña debería ser hasheada
-    }
-    usuarios.append(usuario)
-    print(f"Usuario '{nombre_usuario}' registrado con éxito. ID: {usuario['id']}")
+    print("Resgitar Usuario")
+    dao = UsuarioDAO()
+    id_u = ##tengo que hacer un autoincrement que revise si en la base de datos existe algun usuario y si existe cuente y agregue el utimo valor
+    usuario = str(input("Ingrese un nombre de usuario: "))
+    nombre_u = str(input("Ingrese su nombre: "))
+    apellido_u = str(input("Ingrese su apellido: "))
+    email = str(input("Ingrese su Email: "))
+    contraseña = str(input("Ingrese una contraseña: "))
+    estado = True
+
+    dao.agregarUsuario(id_u, usuario, nombre_u, apellido_u, email, contraseña, estado)
+
+
+
 
 def listar_usuarios():
-    """Muestra todos los usuarios registrados."""
-    print("\n--- LISTADO DE USUARIOS ---")
-    if not usuarios:
-        print("No hay usuarios registrados.")
-        return
-    
-    for usuario in usuarios:
-        print(f"ID: {usuario['id']} | Nombre de Usuario: {usuario['nombre_usuario']}")
+    pass
+   
 
 # --- Funciones para el Carrito de Compras ---
 
 def agregar_al_carrito():
-    """Permite agregar un libro al carrito de un usuario."""
-    print("\n--- AGREGAR AL CARRITO ---")
-    if not usuarios:
-        print("Primero debe registrar al menos un usuario.")
-        return
-    if not libros:
-        print("No hay libros disponibles para agregar al carrito.")
-        return
-
-    listar_usuarios()
-    usuario_id = int(input("Ingrese el ID del usuario: "))
-    
-    usuario_encontrado = None
-    for u in usuarios:
-        if u["id"] == usuario_id:
-            usuario_encontrado = u
-            break
-            
-    if not usuario_encontrado:
-        print("Usuario no encontrado.")
-        return
+    pass
+   
         
     listar_libros()
-    libro_id = int(input("Ingrese el ID del libro que desea agregar al carrito: "))
+    pass
     
-    libro_encontrado = None
-    for l in libros:
-        if l["id"] == libro_id:
-            libro_encontrado = l
-            break
-            
-    if not libro_encontrado:
-        print("Libro no encontrado.")
-        return
-        
-    if libro_encontrado["stock"] <= 0:
-        print("Lo siento, este libro no tiene stock disponible.")
-        return
-
-    # Inicializar carrito para el usuario si no existe
-    if usuario_id not in carrito:
-        carrito[usuario_id] = []
-        
-    carrito[usuario_id].append(libro_encontrado)
-    libro_encontrado["stock"] -= 1 # Reducir el stock del libro
-    print(f"'{libro_encontrado['titulo']}' agregado al carrito de {usuario_encontrado['nombre_usuario']}.")
 
 def ver_carrito():
-    """Permite ver el contenido del carrito de un usuario."""
-    print("\n--- VER CARRITO ---")
-    if not usuarios:
-        print("Primero debe registrar al menos un usuario.")
-        return
-
-    listar_usuarios()
-    usuario_id = int(input("Ingrese el ID del usuario cuyo carrito desea ver: "))
-
-    usuario_encontrado = None
-    for u in usuarios:
-        if u["id"] == usuario_id:
-            usuario_encontrado = u
-            break
-            
-    if not usuario_encontrado:
-        print("Usuario no encontrado.")
-        return
-            
-    if usuario_id not in carrito or not carrito[usuario_id]:
-        print(f"El carrito de {usuario_encontrado['nombre_usuario']} está vacío.")
-        return
-        
-    print(f"\n--- CARRITO DE {usuario_encontrado['nombre_usuario'].upper()} ---")
-    total_carrito = 0
-    for libro in carrito[usuario_id]:
-        print(f"ID: {libro['id']} | Título: {libro['titulo']} | Precio: ${libro['precio']:.2f}")
-        total_carrito += libro['precio']
-    print(f"Total del carrito: ${total_carrito:.2f}")
+    pass
 
 # --- Menú Principal ---
 def mostrar_menu_principal():
