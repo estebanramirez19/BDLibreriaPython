@@ -9,11 +9,25 @@ from pymongo.errors import PyMongoError
 class UsuarioDAO:
     def __init__(self):
         self.conn = Conexion() # Instancia de tu clase de conexión
-        self.collection = self.conn.obtenerConexion()["Usuarios"] # Accede a la colección 'libros'
+        self.collection = self.conn.obtenerConexion()["Usuarios"] # Accede a la colección 'Usuarios'
 
-    def agregarUsuario(self, id_u, usuario, nombre_u, apellido_u, email, contraseña, estado):
+    def obtener_siguiente_id(self):
+        """
+        Obtiene el siguiente ID autoincremental buscando el ID más alto existente
+        en la colección 'Usuarios' y sumándole 1. Si no hay libros, empieza en 1.
+        """
         try:
-            # Aquí es donde asignas las variables directamente a las claves del diccionario
+            ultimo_usuario = self.collection.find_one(sort=[("ID_usuario", -1)])
+            if ultimo_usuario and "ID_usuario" in ultimo_usuario:
+                return ultimo_usuario["ID_usuario"] + 1
+            else:
+                return 1
+        except Exception as e:
+            print(f"Error al obtener el siguiente ID: {e}")
+            return None
+        
+    def agregarUsuario(self, id_u, usuario, nombre_u, apellido_u, email, contraseña, estado):
+        try: #Estructura
             document = {
                 "ID_usuario": id_u,
                 "Usuario": usuario,
@@ -47,8 +61,34 @@ class UsuarioDAO:
             print(f"Error inesperado al agregar Usuario: {ex}")
             return False
         finally:
-            # En DAO's pequeños, no siempre necesitas cerrar la conexión aquí.
-            # El pool de conexiones de PyMongo es eficiente.
-            # Cierras la conexión cuando tu aplicación termina, no en cada operación.
-            # self.conn.cerrarConexion() # Esto cerraría la conexión después de cada operación, lo cual es ineficiente.
-            pass # No cerramos la conexión aquí. Se gestiona por la instancia de Conexion.
+            pass
+
+    def listarUsuarios(self):
+        """
+        Lista todos los Usuarios disponibles en la colección.
+        Retorna una lista de diccionarios, donde cada diccionario es un usuario.
+        """
+        try:
+            # El método find({}) sin argumentos recupera todos los documentos de la colección.
+            # Convertimos el cursor a una lista para poder trabajar con los resultados.
+            usuarios = list(self.collection.find({}))
+            if usuarios:
+                print("\n--- Listado de Libros ---")
+                for usuario in usuarios:
+                    # Imprimimos los detalles de cada usuario.
+                    # Puedes formatear esto como prefieras.
+                    print(f"ID: {usuario.get('ID_usuario', 'N/A')}")
+                    print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
+                    print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
+                    print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
+                    print(f"  Email: {usuario.get('Email', 'N/A')}")
+                    print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
+                    print(f"  Estado: {usuario.get('Estado', 'N/A')}")
+                    print("-------------------------")
+                return usuarios
+            else:
+                print("No se encontraron Usuarios en la base de datos.")
+                return []
+        except Exception as e:
+            print(f"Ocurrió un error al listar los Usuarios: {e}")
+            return []
