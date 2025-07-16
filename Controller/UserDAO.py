@@ -71,9 +71,10 @@ class UsuarioDAO:
         try:
             # El método find({}) sin argumentos recupera todos los documentos de la colección.
             # Convertimos el cursor a una lista para poder trabajar con los resultados.
-            usuarios = list(self.collection.find({}))
+            usuarios = list(self.collection.find({"Estado":True}))
+            
             if usuarios:
-                print("\n--- Listado de Libros ---")
+                print("\n--- Listado de usuarios ---")
                 for usuario in usuarios:
                     # Imprimimos los detalles de cada usuario.
                     # Puedes formatear esto como prefieras.
@@ -83,7 +84,6 @@ class UsuarioDAO:
                     print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
                     print(f"  Email: {usuario.get('Email', 'N/A')}")
                     print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
-                    print(f"  Estado: {usuario.get('Estado', 'N/A')}")
                     print("-------------------------")
                 return usuarios
             else:
@@ -92,3 +92,85 @@ class UsuarioDAO:
         except Exception as e:
             print(f"Ocurrió un error al listar los Usuarios: {e}")
             return []
+        
+    def usuariosEliminados(self):
+        """
+        Lista todos los Usuarios eliminados en la colección.
+        Retorna una lista de diccionarios, donde cada diccionario es un usuario.
+        """
+        try:
+            # El método find({}) sin argumentos recupera todos los documentos de la colección.
+            # Convertimos el cursor a una lista para poder trabajar con los resultados.
+            usuarios = list(self.collection.find({"Estado":False}))
+            
+            if usuarios:
+                print("\n--- Listado de usuarios ---")
+                for usuario in usuarios:
+                    # Imprimimos los detalles de cada usuario.
+                    # Puedes formatear esto como prefieras.
+                    print(f"ID: {usuario.get('ID_usuario', 'N/A')}")
+                    print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
+                    print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
+                    print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
+                    print(f"  Email: {usuario.get('Email', 'N/A')}")
+                    print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
+                    print("-------------------------")
+                return usuarios
+            else:
+                print("No se encontraron Usuarios en la base de datos.")
+                return []
+        except Exception as e:
+            print(f"Ocurrió un error al listar los Usuarios: {e}")
+            return []
+
+
+        
+    def eliminar_usuario(self,id_usuario,interruptor):
+        """
+        Actualiza un libro existente en la colección.
+        """
+        try:
+            filtro = {"ID": id_usuario}
+            actualizacion = {"$set": interruptor} # Aquí es donde se usan todos los nuevos_datos
+
+            result = self.collection.update_one(filtro, actualizacion)
+
+            if result.matched_count > 0:
+                if result.modified_count > 0:
+                    print(f"Usuario con ID '{id_usuario}' actualizado correctamente.")
+                    return True
+                else:
+                    print(f"Usuario con ID '{id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
+                    return True # Consideramos éxito si no hay cambios, pero se encontró
+            else:
+                print(f"No se encontró ningún libro con ID '{id_usuario}'.")
+                return False
+
+        except Exception as e:
+            print(f"Ocurrió un error al actualizar el libro con ID '{id_usuario}': {e}")
+            return False
+        
+    def actualizarUsuario(self, id_usuario, nuevos_datos):
+        """
+        Actualiza un libro existente en la colección.
+        """
+        try:
+            filtro = {"ID": id_usuario}
+            actualizacion = {"$set": nuevos_datos} # Aquí es donde se usan todos los nuevos_datos
+
+            result = self.collection.update_one(filtro, actualizacion)
+
+            if result.matched_count > 0:
+                if result.modified_count > 0:
+                    print(f"Usuario con ID '{id_usuario}' actualizado correctamente.")
+                    return True
+                else:
+                    print(f"Usuario con ID '{id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
+                    return True # Consideramos éxito si no hay cambios, pero se encontró
+            else:
+                print(f"No se encontró ningún usuario con ID '{id_usuario}'.")
+                return False
+
+        except Exception as e:
+            print(f"Ocurrió un error al actualizar el usuario con ID '{id_usuario}': {e}")
+            return False
