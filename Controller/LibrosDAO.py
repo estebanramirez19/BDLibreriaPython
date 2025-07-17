@@ -6,7 +6,6 @@ from Database.Conexion import Conexion
 from pymongo.errors import PyMongoError
 import re 
 
-# **Clase AutorDAO corregida:**
 class LibroDAO:
     def __init__(self):
         self.conn = Conexion() # Instancia de tu clase de conexión
@@ -27,43 +26,36 @@ class LibroDAO:
             print(f"Error al obtener el siguiente ID: {e}")
             return None
 
-    def agregarLibro(self, id, nombre, precio, genero, tipo_tapa, paginas, autor, stock):
+    def agregarLibro(self, nombre, precio, genero, tipo_tapa, paginas, autor, stock):
+        """
+        Agrega un nuevo libro a la colección con un ID autoincremental.
+        """
         try:
+            nuevo_id = self.obtener_siguiente_id()
+            if nuevo_id is None:
+                print("No se pudo generar un ID para el nuevo libro.")
+                return False
+
             document = {
-                "ID": id,
-                "NombreLibro": nombre,
+                "ID": nuevo_id,
+                "Nombre libro": nombre,
                 "Precio": precio,
                 "Genero": genero,
-                "TipoDeTapa": tipo_tapa,
+                "Tipo de tapa": tipo_tapa,
                 "Paginas": paginas,
                 "Autor": autor,
                 "Stock": stock
             }
-
-            # Insertar el documento en la colección
             result = self.collection.insert_one(document)
-
-            # Verificar el resultado de la inserción
             if result.inserted_id:
-                print(f"Libro '{nombre}' con ID '{id}' agregado correctamente. MongoDB _id: {result.inserted_id}")
-                return True # Indica éxito
+                print(f"Libro '{nombre}' con ID '{nuevo_id}' agregado correctamente. MongoDB _id: {result.inserted_id}")
+                return True
             else:
                 print(f"Error desconocido al agregar el Libro '{nombre}'.")
-                return False # Indica fallo
+                return False
         except Exception as e:
             print(f"Ocurrió un error al agregar el libro: {e}")
             return False
-
-        except PyMongoError as ex:
-            # Captura errores específicos de PyMongo (ej. duplicados si usas _id)
-            print(f"Error de PyMongo al agregar libro: {ex}")
-            return False
-        except Exception as ex:
-            # Captura cualquier otro error inesperado
-            print(f"Error inesperado al agregar libro: {ex}")
-            return False
-        finally:
-            pass
 
     def listarLibros(self):
         """

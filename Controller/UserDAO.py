@@ -26,10 +26,16 @@ class UsuarioDAO:
             print(f"Error al obtener el siguiente ID: {e}")
             return None
         
-    def agregarUsuario(self, id_u, usuario, nombre_u, apellido_u, email, contraseña, estado):
-        try: #Estructura
+    def agregarUsuario(self, usuario, nombre_u, apellido_u, email, contraseña, estado):
+        try:
+            # 1. Obtener el siguiente ID autoincremental para el usuario
+            nuevo_id_usuario = self.obtener_siguiente_id() # Asegúrate de que este método existe y es correcto
+            if nuevo_id_usuario is None:
+                print("No se pudo generar un ID para el nuevo usuario.")
+                return False
+
             document = {
-                "ID_usuario": id_u,
+                "ID_usuario": nuevo_id_usuario, # Usamos el ID generado
                 "Usuario": usuario,
                 "Nombre": nombre_u,
                 "Apellido": apellido_u,
@@ -38,30 +44,22 @@ class UsuarioDAO:
                 "Estado" : estado
             }
 
-            # Insertar el documento en la colección
             result = self.collection.insert_one(document)
 
-            # Verificar el resultado de la inserción
             if result.inserted_id:
-                print(f"Usuario '{usuario}' con ID '{id_u}' agregado correctamente. MongoDB _id: {result.inserted_id}")
-                return True # Indica éxito
+                print(f"Usuario '{usuario}' con ID '{nuevo_id_usuario}' agregado correctamente. MongoDB _id: {result.inserted_id}")
+                return True
             else:
                 print(f"Error desconocido al agregar el Usuario '{usuario}'.")
-                return False # Indica fallo
-        except Exception as e:
-            print(f"Ocurrió un error al agregar el Usuario: {e}")
-            return False
-
+                return False
         except PyMongoError as ex:
-            # Captura errores específicos de PyMongo (ej. duplicados si usas _id)
-            print(f"Error de PyMongo al agregar Usuario: {ex}")
+            # Primero captura los errores específicos de PyMongo
+            print(f"Error de base de datos (PyMongo) al agregar Usuario: {ex}")
             return False
         except Exception as ex:
-            # Captura cualquier otro error inesperado
-            print(f"Error inesperado al agregar Usuario: {ex}")
+            # Luego captura cualquier otro error general
+            print(f"Ocurrió un error inesperado al agregar el Usuario: {ex}")
             return False
-        finally:
-            pass
 
     def listarUsuarios(self):
         """
