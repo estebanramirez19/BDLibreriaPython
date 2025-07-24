@@ -26,9 +26,6 @@ class Conexion():
             self.client = None                     # Si el cliente esta None significa que falla la conexión
 
     def obtenerConexion(self):
-        # Aquí deberías devolver la base de datos, no el cliente,
-        # si tu intención es interactuar con colecciones.
-        # O puedes tener obtenerCliente() y obtenerDB()
         if self.db is None: # Si la DB no está disponible
             print("Error al iniciar la conexion, Intentando reconectar..")
             self.conectar() # Intenta reconectar

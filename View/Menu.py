@@ -1,6 +1,6 @@
 # Esteban Andres Ramirez Gonzalez
 # Inacap Ingenieria en informatica - Vespertino
-# Programación Orientada a Objeto Seguro (TI3V21/V-IEI-N2-P3-C1/V Puente Alto IEI)
+
 
 from Controller.LibrosDAO import LibroDAO
 from Controller.UserDAO import UsuarioDAO 
@@ -30,9 +30,9 @@ def registrar_libro():
     print("\n--- Registrar Nuevo Libro ---")
     dao = LibroDAO()
 
-    nombre = input("Ingrese el nombre del libro: ").strip().capitalize()
+    nombre = input("Ingrese el nombre del libro: ").strip().title()
     precio = get_float_input("Ingrese el precio: $")
-    genero = input("Ingrese el genero del libro: ").strip().capitalize()
+    genero = input("Ingrese el genero del libro: ").strip().title()
     tipo_tapa = input("Ingrese el tipo de tapa (ej: Dura, Blanda): ").strip().capitalize()
     paginas = get_int_input("Ingrese la cantIdad de páginas: ")
     autor = input("Ingrese el nombre del autor: ").strip().title()
@@ -41,7 +41,7 @@ def registrar_libro():
     if dao.agregarLibro(nombre, precio, genero, tipo_tapa, paginas, autor, stock):
         print(f"Libro '{nombre}' registrado exitosamente con Id automático.")
     else:
-        print(f"No se pudo registrar el libro '{nombre}'. Consulte los logs para más detalles.")
+        print("")
 
 def listar_libros():
     dao = LibroDAO()
@@ -52,13 +52,14 @@ def buscar_libro():
     print("\n--- Buscar Libros ---")
     dao = LibroDAO()
     print("Tipos de atributos:")
-    print("1.- Id")
-    print("2.- Nombre")
-    print("3.- Autor")
-    print("4.- Precio")
-    print("5.- Género")
-    print("6.- Tapa")
-    print("7.- Páginas")
+    print("Id")
+    print("Nombre")
+    print("Autor")
+    print("Precio")
+    print("Género")
+    print("Tapa")
+    print("Páginas")
+
     tipo = input("Ingrese el nombre o fragmento del atributo del libro a buscar: ").strip().capitalize()
     fragmento = input("Ingrese el nombre o fragmento del nombre del libro a buscar: ").strip().capitalize()
 
@@ -70,7 +71,7 @@ def buscar_libro():
         return
 
     libros = dao.buscarLibros(tipo,fragmento)
-    # El método buscarLibrosPorNombre ya imprime los resultados.
+
 
 def actualizar_libro():
     print("\n--- Editar Libro Completo ---")
@@ -89,12 +90,11 @@ def actualizar_libro():
     nuevo_autor = input("Ingrese el nuevo nombre del autor: ").strip().title()
     nuevo_stock = get_int_input("Ingrese la nueva cantIdad en stock: ")
 
-    # Asegúrate de que las claves del diccionario coincIdan EXACTAMENTE con los nombres de tus campos en MongoDB
     nuevos_datos = {
-        "Nombre": nuevo_nombre, # CorregIdo: "Nombre libro"
+        "Nombre": nuevo_nombre, 
         "Precio": nuevo_precio,
         "Genero": nuevo_genero,
-        "Tapa": nuevo_tipo_tapa, # CorregIdo: "Tipo de tapa"
+        "Tapa": nuevo_tipo_tapa, 
         "Paginas": nuevas_paginas,
         "Autor": nuevo_autor,
         "Stock": nuevo_stock
@@ -105,7 +105,7 @@ def actualizar_libro():
     else:
         print(f"No se pudo editar el libro con Id '{Id_a_editar}'.")
 
-# Se sacan estas funciones de eliminar_libro para poder llamarlas directamente desde el menú
+
 def eliminar_libro_Id():
     print("\n--- Eliminar Libro por Id ---")
     dao = LibroDAO()
@@ -115,8 +115,8 @@ def eliminar_libro_Id():
     confirmacion = input(f"¿Está seguro que desea eliminar el libro con Id '{Id_a_eliminar}'? (s/n): ").lower().strip()
 
     if confirmacion == 's':
-        # Asumo que tu DAO tiene un método eliminarLibro o eliminarLibroById
-        if dao.eliminarLibroId(Id_a_eliminar): # Usamos el nombre que ya se sugirió: eliminarLibro
+ 
+        if dao.eliminarLibroId(Id_a_eliminar): 
             print(f"Operación de eliminación para el libro con Id '{Id_a_eliminar}' completada.")
         else:
             print(f"No se pudo eliminar el libro con Id '{Id_a_eliminar}'.")
@@ -132,8 +132,8 @@ def eliminar_libro_nombre():
     confirmacion = input(f"¿Está seguro que desea eliminar el libro '{nombre_eliminar}'? (s/n): ").lower().strip()
 
     if confirmacion == 's':
-        # Asumo que tu DAO tiene un método eliminarLibroNombre
-        if dao.eliminarLibroNombre(nombre_eliminar): # Asegúrate de tener este método en LibroDAO
+     
+        if dao.eliminarLibroNombre(nombre_eliminar): 
             print(f"Operación de eliminación para el libro '{nombre_eliminar}' completada.")
         else:
             print(f"No se pudo eliminar el libro '{nombre_eliminar}'.")
@@ -164,8 +164,8 @@ def registrar_usuario():
     dao = UsuarioDAO()
 
     usuario = input("Ingrese un nombre de usuario: ").strip().lower()
-    nombre_u = input("Ingrese su nombre: ").strip().capitalize()
-    apellIdo_u = input("Ingrese su apellIdo: ").strip().capitalize()
+    nombre_u = input("Ingrese su nombre: ").strip().title()
+    apellIdo_u = input("Ingrese su apellIdo: ").strip().title()
     email = input("Ingrese su Email: ").strip().lower()
     contraseña = input("Ingrese una contraseña: ") # Contraseña como string
     estado = True # Por defecto, un nuevo usuario está activo
@@ -199,7 +199,7 @@ def actualizar_usuario():
         "Contraseña": nueva_contraseña
     }
 
-    # Asegúrate de que tu UsuarioDAO tenga un método 'actualizarUsuario'
+
     if dao.actualizarUsuario(Id_a_editar, nuevos_datos):
         print(f"Edición del usuario con Id '{Id_a_editar}' completada.")
     else:
@@ -208,17 +208,17 @@ def actualizar_usuario():
 
 def listar_usuarios():
     dao = UsuarioDAO()
-    # Asumo que dao.listarUsuarios() ya filtra por estado True si es lo que deseas mostrar por defecto.
+  
     dao.listarUsuarios()
 
 def listar_usuarios_eliminados():
     dao = UsuarioDAO()
-    # Asumo que tienes este método en UsuarioDAO para listar usuarios con Estado=False
+
     dao.usuariosEliminados()
 
 def eliminar_usuario():
     print("\n--- Desactivar/Eliminar Usuario (Cambiar Estado) ---")
-    dao = UsuarioDAO() # ¡Correcto, usar UsuarioDAO aquí!
+    dao = UsuarioDAO()
 
     Id_a_modificar = get_int_input("Ingrese el Id del usuario que desea desactivar/eliminar: ")
 
@@ -277,7 +277,7 @@ def main():
         elif opcion == '4':
             actualizar_libro()
         elif opcion == '5':
-            eliminar_libro() # Llama a la función que te da a elegir Id o Nombre
+            eliminar_libro() 
         elif opcion == '6':
             registrar_usuario()
         elif opcion == '7':

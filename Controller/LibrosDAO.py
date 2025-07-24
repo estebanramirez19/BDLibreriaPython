@@ -5,11 +5,13 @@
 from Database.Conexion import Conexion
 from pymongo.errors import PyMongoError
 import re 
+import random
+from faker import Faker 
 
 class LibroDAO:
     def __init__(self):
-        self.conn = Conexion() # Instancia de tu clase de conexión
-        self.collection = self.conn.obtenerConexion()["Libros"] # Accede a la colección 'libros'
+        self.conn = Conexion() 
+        self.collection = self.conn.obtenerConexion()["Libros"] 
 
     def obtener_siguiente_Id(self):
         """
@@ -54,7 +56,7 @@ class LibroDAO:
                 print(f"Error desconocIdo al agregar el Libro '{nombre}'.")
                 return False
         except Exception as e:
-            print(f"Ocurrió un error al agregar el libro: {e}")
+            print(f"libro agregado {nombre}")
             return False
 
     def listarLibros(self):
@@ -63,21 +65,20 @@ class LibroDAO:
         Retorna una lista de diccionarios, donde cada diccionario es un libro.
         """
         try:
-            # El método find({}) sin argumentos recupera todos los documentos de la colección.
-            # Convertimos el cursor a una lista para poder trabajar con los resultados.
+
             libros = list(self.collection.find({}))
             if libros:
                 print("\n--- Listado de Libros ---")
                 for libro in libros:
-                    # Imprimimos los detalles de cada libro.
-                    # Puedes formatear esto como prefieras.
+
                     print(f"Id: {libro.get('Id', 'N/A')}")
-                    print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
-                    print(f"  Autor: {libro.get('Autor', 'N/A')}")
+                    print(f"  Nombre: {libro.get('Nombre', 'N/A')}")
                     print(f"  Precio: ${libro.get('Precio', 'N/A')}")
                     print(f"  Género: {libro.get('Genero', 'N/A')}")
-                    print(f"  Tipo de Tapa: {libro.get('Tipo de tapa', 'N/A')}")
+                    print(f"  Tipo de Tapa: {libro.get('Tapa', 'N/A')}")
                     print(f"  Páginas: {libro.get('Paginas', 'N/A')}")
+                    print(f"  Autor: {libro.get('Autor', 'N/A')}")
+                    print(f"  Stock: {libro.get('Stock', 'N/A')}")
                     print("-------------------------")
                 return libros
             else:
@@ -92,14 +93,9 @@ class LibroDAO:
         Elimina un libro de la colección por su Id.
         """
         try:
-            # 1. Definir el filtro para encontrar el documento a eliminar
             filtro = {"Id": Id_libro}
-
-            # 2. Ejecutar la operación de eliminación
-            # delete_one elimina el primer documento que coincIde con el filtro
             result = self.collection.delete_one(filtro)
 
-            # 3. Verificar el resultado de la eliminación
             if result.deleted_count > 0:
                 print(f"Libro con Id '{Id_libro}' eliminado correctamente.")
                 return True
@@ -116,14 +112,10 @@ class LibroDAO:
         Elimina un libro de la colección por su Nombre.
         """
         try:
-            # 1. Definir el filtro para encontrar el documento a eliminar
             filtro = {"Nombre": nombre}
 
-            # 2. Ejecutar la operación de eliminación
-            # delete_one elimina el primer documento que coincIde con el filtro
             result = self.collection.delete_one(filtro)
 
-            # 3. Verificar el resultado de la eliminación
             if result.deleted_count > 0:
                 print(f"Libro '{nombre}' eliminado correctamente.")
                 return True
@@ -141,7 +133,7 @@ class LibroDAO:
         """
         try:
             filtro = {"Id": Id_libro}
-            actualizacion = {"$set": nuevos_datos} # Aquí es donde se usan todos los nuevos_datos
+            actualizacion = {"$set": nuevos_datos} 
 
             result = self.collection.update_one(filtro, actualizacion)
 
@@ -151,7 +143,7 @@ class LibroDAO:
                     return True
                 else:
                     print(f"Libro con Id '{Id_libro}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
+                    return True 
             else:
                 print(f"No se encontró ningún libro con Id '{Id_libro}'.")
                 return False
@@ -170,10 +162,11 @@ class LibroDAO:
 
             libros_encontrados = list(self.collection.find(query))
 
+
             if libros_encontrados:
                 print(f"\n--- Libros encontrados con '{fragmento_nombre}' ---")
                 for libro in libros_encontrados:
-                    print(f"Id: {libro.get('Id', 'N/A')}")
+                    print(f"Id: {libro.get('ID', 'N/A')}")
                     print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
                     print(f"  Autor: {libro.get('Autor', 'N/A')}")
                     print(f"  Precio: ${libro.get('Precio', 'N/A')}")
@@ -192,8 +185,7 @@ class LibroDAO:
 
     def buscarLibros(self, tipo, nombre):
         """
-        Busca libros en la colección que contengan el fragmento_nombre
-        en su campo 'Nombre libro', ignorando mayúsculas y minúsculas.
+        Busca libros
         """
         try:
             query = {tipo: {"$regex": re.compile(nombre, re.IGNORECASE)}}
@@ -204,19 +196,19 @@ class LibroDAO:
                 print(f"\n--- Libros encontrados con '{nombre}' ---")
                 for libro in libros_encontrados:
                     print(f"Id: {libro.get('Id', 'N/A')}")
-                    print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
-                    print(f"  Autor: {libro.get('Autor', 'N/A')}")
+                    print(f"  Nombre: {libro.get('Nombre', 'N/A')}")
                     print(f"  Precio: ${libro.get('Precio', 'N/A')}")
                     print(f"  Género: {libro.get('Genero', 'N/A')}")
-                    print(f"  Tapa: {libro.get('Tipo de tapa', 'N/A')}")
+                    print(f"  Tapa: {libro.get('Tapa', 'N/A')}")
                     print(f"  Páginas: {libro.get('Paginas', 'N/A')}")
+                    print(f"  Autor: {libro.get('Autor', 'N/A')}")
                     print(f"  Stock: {libro.get('Stock', 'N/A')}")
                     print("-------------------------")
                 return libros_encontrados
             else:
-                print(f"No se encontraron libros que contengan '{nombre}' en su nombre.")
+                print(f"No se encontraron libros que contengan '{nombre}'.")
                 return []
         except Exception as e:
-            print(f"Ocurrió un error al buscar libros por nombre: {e}")
+            print(f"Ocurrió un error al buscar libros: {e}")
             return []        
 

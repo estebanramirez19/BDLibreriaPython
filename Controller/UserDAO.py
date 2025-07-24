@@ -8,8 +8,8 @@ from pymongo.errors import PyMongoError
 # **Clase AutorDAO corregIda:**
 class UsuarioDAO:
     def __init__(self):
-        self.conn = Conexion() # Instancia de tu clase de conexión
-        self.collection = self.conn.obtenerConexion()["Usuarios"] # Accede a la colección 'Usuarios'
+        self.conn = Conexion() 
+        self.collection = self.conn.obtenerConexion()["Usuarios"] 
 
     def obtener_siguiente_Id(self):
         """
@@ -29,16 +29,16 @@ class UsuarioDAO:
     def agregarUsuario(self, usuario, nombre_u, apellIdo_u, email, contraseña, estado):
         try:
             # 1. Obtener el siguiente Id autoincremental para el usuario
-            nuevo_Id_usuario = self.obtener_siguiente_Id() # Asegúrate de que este método existe y es correcto
+            nuevo_Id_usuario = self.obtener_siguiente_Id() 
             if nuevo_Id_usuario is None:
                 print("No se pudo generar un Id para el nuevo usuario.")
                 return False
 
             document = {
-                "Id_usuario": nuevo_Id_usuario, # Usamos el Id generado
+                "Id_usuario": nuevo_Id_usuario,
                 "Usuario": usuario,
                 "Nombre": nombre_u,
-                "ApellIdo": apellIdo_u,
+                "Apellido": apellIdo_u,
                 "Email": email,
                 "Contraseña": contraseña,
                 "Estado" : estado
@@ -53,11 +53,9 @@ class UsuarioDAO:
                 print(f"Error desconocIdo al agregar el Usuario '{usuario}'.")
                 return False
         except PyMongoError as ex:
-            # Primero captura los errores específicos de PyMongo
             print(f"Error de base de datos (PyMongo) al agregar Usuario: {ex}")
             return False
         except Exception as ex:
-            # Luego captura cualquier otro error general
             print(f"Ocurrió un error inesperado al agregar el Usuario: {ex}")
             return False
 
@@ -67,19 +65,15 @@ class UsuarioDAO:
         Retorna una lista de diccionarios, donde cada diccionario es un usuario.
         """
         try:
-            # El método find({}) sin argumentos recupera todos los documentos de la colección.
-            # Convertimos el cursor a una lista para poder trabajar con los resultados.
             usuarios = list(self.collection.find({"Estado":True}))
             
             if usuarios:
                 print("\n--- Listado de usuarios ---")
                 for usuario in usuarios:
-                    # Imprimimos los detalles de cada usuario.
-                    # Puedes formatear esto como prefieras.
                     print(f"Id: {usuario.get('Id_usuario', 'N/A')}")
                     print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
                     print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
-                    print(f"  ApellIdo: ${usuario.get('ApellIdo', 'N/A')}")
+                    print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
                     print(f"  Email: {usuario.get('Email', 'N/A')}")
                     print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
                     print("-------------------------")
@@ -97,15 +91,11 @@ class UsuarioDAO:
         Retorna una lista de diccionarios, donde cada diccionario es un usuario.
         """
         try:
-            # El método find({}) sin argumentos recupera todos los documentos de la colección.
-            # Convertimos el cursor a una lista para poder trabajar con los resultados.
             usuarios = list(self.collection.find({"Estado":False}))
             
             if usuarios:
                 print("\n--- Listado de usuarios ---")
                 for usuario in usuarios:
-                    # Imprimimos los detalles de cada usuario.
-                    # Puedes formatear esto como prefieras.
                     print(f"Id: {usuario.get('Id_usuario', 'N/A')}")
                     print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
                     print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
@@ -139,7 +129,7 @@ class UsuarioDAO:
                     return True
                 else:
                     print(f"Usuario con Id '{Id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
+                    return True 
             else:
                 print(f"No se encontró ningún libro con Id '{Id_usuario}'.")
                 return False
@@ -164,7 +154,7 @@ class UsuarioDAO:
                     return True
                 else:
                     print(f"Usuario con Id '{Id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
+                    return True 
             else:
                 print(f"No se encontró ningún usuario con Id '{Id_usuario}'.")
                 return False
