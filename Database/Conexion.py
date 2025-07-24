@@ -16,7 +16,7 @@ class Conexion():
         try:
             self.client = MongoClient("mongodb+srv://esteban:Earg241690@cluster0.8y7ebgm.mongodb.net/?retryWrites=true&w=majority")
             
-            self.client.admin.command('ping') # Verificar la conexión al servidor
+            self.client.admin.command('ping') # Verificar la conexión al servIdor
 
             self.db = self.client[self.db_name] # Selecciona la base de datos
             print(f"Conexión exitosa a la base de datos '{self.db_name}'") #imprimir que se conecto a la BD

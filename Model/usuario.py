@@ -3,17 +3,17 @@
 # Base de datos no relacionales
 
 class Usuario():
-    def __init__(self, id_u:int, usuario:str, nombre_u:str, apellido_u:int, email:str, contraseña:str, estado_u:bool):
-        self.id_u = id_u
+    def __init__(self, Id_u:int, usuario:str, nombre_u:str, apellIdo_u:int, email:str, contraseña:str, estado_u:bool):
+        self.Id_u = Id_u
         self.usuario = usuario
         self.nombre = nombre_u
-        self.apellido_u = apellido_u
+        self.apellIdo_u = apellIdo_u
         self.email = email
         self.contraseña = contraseña
         self.estado_u = estado_u
     
     def mostrarDatos(self):
-        print(f"ID: {self.id} - Usuario {self.usuario} - Nombre: {self.nombre} - Apellido: {self.apellido_u} - Email: {self.email} - Contraseña: {self.contraseña}")
+        print(f"Id: {self.Id} - Usuario {self.usuario} - Nombre: {self.nombre} - ApellIdo: {self.apellIdo_u} - Email: {self.email} - Contraseña: {self.contraseña}")
 
     def __str__(self):
         return f"Nombre: {self.nombre}"

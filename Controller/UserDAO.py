@@ -5,40 +5,40 @@
 from Database.Conexion import Conexion
 from pymongo.errors import PyMongoError
 
-# **Clase AutorDAO corregida:**
+# **Clase AutorDAO corregIda:**
 class UsuarioDAO:
     def __init__(self):
         self.conn = Conexion() # Instancia de tu clase de conexión
         self.collection = self.conn.obtenerConexion()["Usuarios"] # Accede a la colección 'Usuarios'
 
-    def obtener_siguiente_id(self):
+    def obtener_siguiente_Id(self):
         """
-        Obtiene el siguiente ID autoincremental buscando el ID más alto existente
+        Obtiene el siguiente Id autoincremental buscando el Id más alto existente
         en la colección 'Usuarios' y sumándole 1. Si no hay libros, empieza en 1.
         """
         try:
-            ultimo_usuario = self.collection.find_one(sort=[("ID_usuario", -1)])
-            if ultimo_usuario and "ID_usuario" in ultimo_usuario:
-                return ultimo_usuario["ID_usuario"] + 1
+            ultimo_usuario = self.collection.find_one(sort=[("Id_usuario", -1)])
+            if ultimo_usuario and "Id_usuario" in ultimo_usuario:
+                return ultimo_usuario["Id_usuario"] + 1
             else:
                 return 1
         except Exception as e:
-            print(f"Error al obtener el siguiente ID: {e}")
+            print(f"Error al obtener el siguiente Id: {e}")
             return None
         
-    def agregarUsuario(self, usuario, nombre_u, apellido_u, email, contraseña, estado):
+    def agregarUsuario(self, usuario, nombre_u, apellIdo_u, email, contraseña, estado):
         try:
-            # 1. Obtener el siguiente ID autoincremental para el usuario
-            nuevo_id_usuario = self.obtener_siguiente_id() # Asegúrate de que este método existe y es correcto
-            if nuevo_id_usuario is None:
-                print("No se pudo generar un ID para el nuevo usuario.")
+            # 1. Obtener el siguiente Id autoincremental para el usuario
+            nuevo_Id_usuario = self.obtener_siguiente_Id() # Asegúrate de que este método existe y es correcto
+            if nuevo_Id_usuario is None:
+                print("No se pudo generar un Id para el nuevo usuario.")
                 return False
 
             document = {
-                "ID_usuario": nuevo_id_usuario, # Usamos el ID generado
+                "Id_usuario": nuevo_Id_usuario, # Usamos el Id generado
                 "Usuario": usuario,
                 "Nombre": nombre_u,
-                "Apellido": apellido_u,
+                "ApellIdo": apellIdo_u,
                 "Email": email,
                 "Contraseña": contraseña,
                 "Estado" : estado
@@ -46,11 +46,11 @@ class UsuarioDAO:
 
             result = self.collection.insert_one(document)
 
-            if result.inserted_id:
-                print(f"Usuario '{usuario}' con ID '{nuevo_id_usuario}' agregado correctamente. MongoDB _id: {result.inserted_id}")
+            if result.inserted_Id:
+                print(f"Usuario '{usuario}' con Id '{nuevo_Id_usuario}' agregado correctamente. MongoDB _Id: {result.inserted_Id}")
                 return True
             else:
-                print(f"Error desconocido al agregar el Usuario '{usuario}'.")
+                print(f"Error desconocIdo al agregar el Usuario '{usuario}'.")
                 return False
         except PyMongoError as ex:
             # Primero captura los errores específicos de PyMongo
@@ -76,10 +76,10 @@ class UsuarioDAO:
                 for usuario in usuarios:
                     # Imprimimos los detalles de cada usuario.
                     # Puedes formatear esto como prefieras.
-                    print(f"ID: {usuario.get('ID_usuario', 'N/A')}")
+                    print(f"Id: {usuario.get('Id_usuario', 'N/A')}")
                     print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
                     print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
-                    print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
+                    print(f"  ApellIdo: ${usuario.get('ApellIdo', 'N/A')}")
                     print(f"  Email: {usuario.get('Email', 'N/A')}")
                     print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
                     print("-------------------------")
@@ -106,10 +106,10 @@ class UsuarioDAO:
                 for usuario in usuarios:
                     # Imprimimos los detalles de cada usuario.
                     # Puedes formatear esto como prefieras.
-                    print(f"ID: {usuario.get('ID_usuario', 'N/A')}")
+                    print(f"Id: {usuario.get('Id_usuario', 'N/A')}")
                     print(f"  Usuario: {usuario.get('Usuario', 'N/A')}")
                     print(f"  Nombre: {usuario.get('Nombre', 'N/A')}")
-                    print(f"  Apellido: ${usuario.get('Apellido', 'N/A')}")
+                    print(f"  ApellIdo: ${usuario.get('ApellIdo', 'N/A')}")
                     print(f"  Email: {usuario.get('Email', 'N/A')}")
                     print(f"  Contraseña: {usuario.get('Contraseña', 'N/A')}")
                     print("-------------------------")
@@ -123,52 +123,52 @@ class UsuarioDAO:
 
 
         
-    def eliminar_usuario(self,id_usuario,interruptor):
+    def eliminar_usuario(self,Id_usuario,interruptor):
         """
         Actualiza un libro existente en la colección.
         """
         try:
-            filtro = {"ID": id_usuario}
+            filtro = {"Id": Id_usuario}
             actualizacion = {"$set": interruptor} # Aquí es donde se usan todos los nuevos_datos
 
             result = self.collection.update_one(filtro, actualizacion)
 
             if result.matched_count > 0:
                 if result.modified_count > 0:
-                    print(f"Usuario con ID '{id_usuario}' actualizado correctamente.")
+                    print(f"Usuario con Id '{Id_usuario}' actualizado correctamente.")
                     return True
                 else:
-                    print(f"Usuario con ID '{id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # Consideramos éxito si no hay cambios, pero se encontró
+                    print(f"Usuario con Id '{Id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
+                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
             else:
-                print(f"No se encontró ningún libro con ID '{id_usuario}'.")
+                print(f"No se encontró ningún libro con Id '{Id_usuario}'.")
                 return False
 
         except Exception as e:
-            print(f"Ocurrió un error al actualizar el libro con ID '{id_usuario}': {e}")
+            print(f"Ocurrió un error al actualizar el libro con Id '{Id_usuario}': {e}")
             return False
         
-    def actualizarUsuario(self, id_usuario, nuevos_datos):
+    def actualizarUsuario(self, Id_usuario, nuevos_datos):
         """
         Actualiza un libro existente en la colección.
         """
         try:
-            filtro = {"ID": id_usuario}
+            filtro = {"Id": Id_usuario}
             actualizacion = {"$set": nuevos_datos} # Aquí es donde se usan todos los nuevos_datos
 
             result = self.collection.update_one(filtro, actualizacion)
 
             if result.matched_count > 0:
                 if result.modified_count > 0:
-                    print(f"Usuario con ID '{id_usuario}' actualizado correctamente.")
+                    print(f"Usuario con Id '{Id_usuario}' actualizado correctamente.")
                     return True
                 else:
-                    print(f"Usuario con ID '{id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # Consideramos éxito si no hay cambios, pero se encontró
+                    print(f"Usuario con Id '{Id_usuario}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
+                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
             else:
-                print(f"No se encontró ningún usuario con ID '{id_usuario}'.")
+                print(f"No se encontró ningún usuario con Id '{Id_usuario}'.")
                 return False
 
         except Exception as e:
-            print(f"Ocurrió un error al actualizar el usuario con ID '{id_usuario}': {e}")
+            print(f"Ocurrió un error al actualizar el usuario con Id '{Id_usuario}': {e}")
             return False

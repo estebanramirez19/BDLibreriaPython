@@ -4,9 +4,9 @@
 
 
 class Libro():
-    def __init__(self, id:int, nombre:str, precio:int, genero:str, tipo_tapa:str ,paginas:int, autor:str , stock:int):
+    def __init__(self, Id:int, nombre:str, precio:int, genero:str, tipo_tapa:str ,paginas:int, autor:str , stock:int):
         self.nombre = nombre
-        self.id = id
+        self.Id = Id
         self.precio = precio
         self.genero = genero
         self.tipo_tapa = tipo_tapa
@@ -16,7 +16,7 @@ class Libro():
 
     
     def mostrarDatos(self):
-        print(f"ID: {self.id} - Nombre del libro: {self.nombre}  - precio: {self.precio} - Genero: {self.genero} - Tipo de tapa: {self.tipo_tapa} - Paginas: {self.paginas} - Autor: {self.autor} - Stock: {self.stock}")
+        print(f"Id: {self.Id} - Nombre del libro: {self.nombre}  - precio: {self.precio} - Genero: {self.genero} - Tipo de tapa: {self.tipo_tapa} - Paginas: {self.paginas} - Autor: {self.autor} - Stock: {self.stock}")
     
     
 

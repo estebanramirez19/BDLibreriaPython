@@ -11,47 +11,47 @@ class LibroDAO:
         self.conn = Conexion() # Instancia de tu clase de conexión
         self.collection = self.conn.obtenerConexion()["Libros"] # Accede a la colección 'libros'
 
-    def obtener_siguiente_id(self):
+    def obtener_siguiente_Id(self):
         """
-        Obtiene el siguiente ID autoincremental buscando el ID más alto existente
+        Obtiene el siguiente Id autoincremental buscando el Id más alto existente
         en la colección 'libros' y sumándole 1. Si no hay libros, empieza en 1.
         """
         try:
-            ultimo_libro = self.collection.find_one(sort=[("ID", -1)])
-            if ultimo_libro and "ID" in ultimo_libro:
-                return ultimo_libro["ID"] + 1
+            ultimo_libro = self.collection.find_one(sort=[("Id", -1)])
+            if ultimo_libro and "Id" in ultimo_libro:
+                return ultimo_libro["Id"] + 1
             else:
                 return 1
         except Exception as e:
-            print(f"Error al obtener el siguiente ID: {e}")
+            print(f"Error al obtener el siguiente Id: {e}")
             return None
 
     def agregarLibro(self, nombre, precio, genero, tipo_tapa, paginas, autor, stock):
         """
-        Agrega un nuevo libro a la colección con un ID autoincremental.
+        Agrega un nuevo libro a la colección con un Id autoincremental.
         """
         try:
-            nuevo_id = self.obtener_siguiente_id()
-            if nuevo_id is None:
-                print("No se pudo generar un ID para el nuevo libro.")
+            nuevo_Id = self.obtener_siguiente_Id()
+            if nuevo_Id is None:
+                print("No se pudo generar un Id para el nuevo libro.")
                 return False
 
             document = {
-                "ID": nuevo_id,
-                "Nombre libro": nombre,
+                "Id": nuevo_Id,
+                "Nombre": nombre,
                 "Precio": precio,
                 "Genero": genero,
-                "Tipo de tapa": tipo_tapa,
+                "Tapa": tipo_tapa,
                 "Paginas": paginas,
                 "Autor": autor,
                 "Stock": stock
             }
             result = self.collection.insert_one(document)
-            if result.inserted_id:
-                print(f"Libro '{nombre}' con ID '{nuevo_id}' agregado correctamente. MongoDB _id: {result.inserted_id}")
+            if result.inserted_Id:
+                print(f"Libro '{nombre}' con Id '{nuevo_Id}' agregado correctamente. MongoDB _Id: {result.inserted_Id}")
                 return True
             else:
-                print(f"Error desconocido al agregar el Libro '{nombre}'.")
+                print(f"Error desconocIdo al agregar el Libro '{nombre}'.")
                 return False
         except Exception as e:
             print(f"Ocurrió un error al agregar el libro: {e}")
@@ -71,7 +71,7 @@ class LibroDAO:
                 for libro in libros:
                     # Imprimimos los detalles de cada libro.
                     # Puedes formatear esto como prefieras.
-                    print(f"ID: {libro.get('ID', 'N/A')}")
+                    print(f"Id: {libro.get('Id', 'N/A')}")
                     print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
                     print(f"  Autor: {libro.get('Autor', 'N/A')}")
                     print(f"  Precio: ${libro.get('Precio', 'N/A')}")
@@ -87,40 +87,40 @@ class LibroDAO:
             print(f"Ocurrió un error al listar los libros: {e}")
             return []
         
-    def eliminarLibroId(self, id_libro):
+    def eliminarLibroId(self, Id_libro):
         """
-        Elimina un libro de la colección por su ID.
+        Elimina un libro de la colección por su Id.
         """
         try:
             # 1. Definir el filtro para encontrar el documento a eliminar
-            filtro = {"NombreLibro": id_libro}
+            filtro = {"Id": Id_libro}
 
             # 2. Ejecutar la operación de eliminación
-            # delete_one elimina el primer documento que coincide con el filtro
+            # delete_one elimina el primer documento que coincIde con el filtro
             result = self.collection.delete_one(filtro)
 
             # 3. Verificar el resultado de la eliminación
             if result.deleted_count > 0:
-                print(f"Libro con ID '{id_libro}' eliminado correctamente.")
+                print(f"Libro con Id '{Id_libro}' eliminado correctamente.")
                 return True
             else:
-                print(f"No se encontró ningún libro con ID '{id_libro}' para eliminar.")
+                print(f"No se encontró ningún libro con Id '{Id_libro}' para eliminar.")
                 return False
 
         except Exception as e:
-            print(f"Ocurrió un error al eliminar el libro con ID '{id_libro}': {e}")
+            print(f"Ocurrió un error al eliminar el libro con Id '{Id_libro}': {e}")
             return False
         
-    def eliminarLibroNombre(self,nombre ):
+    def eliminarLibroNombre(self,nombre):
         """
         Elimina un libro de la colección por su Nombre.
         """
         try:
             # 1. Definir el filtro para encontrar el documento a eliminar
-            filtro = {"ID": nombre}
+            filtro = {"Nombre": nombre}
 
             # 2. Ejecutar la operación de eliminación
-            # delete_one elimina el primer documento que coincide con el filtro
+            # delete_one elimina el primer documento que coincIde con el filtro
             result = self.collection.delete_one(filtro)
 
             # 3. Verificar el resultado de la eliminación
@@ -128,36 +128,36 @@ class LibroDAO:
                 print(f"Libro '{nombre}' eliminado correctamente.")
                 return True
             else:
-                print(f"No se encontró ningún libro con ID '{nombre}' para eliminar.")
+                print(f"No se encontró ningún libro con Id '{nombre}' para eliminar.")
                 return False
 
         except Exception as e:
-            print(f"Ocurrió un error al eliminar el libro con ID '{nombre}': {e}")
+            print(f"Ocurrió un error al eliminar el libro con Id '{nombre}': {e}")
             return False
 
-    def actualizarLibro(self, id_libro, nuevos_datos):
+    def actualizarLibro(self, Id_libro, nuevos_datos):
         """
         Actualiza un libro existente en la colección.
         """
         try:
-            filtro = {"ID": id_libro}
+            filtro = {"Id": Id_libro}
             actualizacion = {"$set": nuevos_datos} # Aquí es donde se usan todos los nuevos_datos
 
             result = self.collection.update_one(filtro, actualizacion)
 
             if result.matched_count > 0:
                 if result.modified_count > 0:
-                    print(f"Libro con ID '{id_libro}' actualizado correctamente.")
+                    print(f"Libro con Id '{Id_libro}' actualizado correctamente.")
                     return True
                 else:
-                    print(f"Libro con ID '{id_libro}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
-                    return True # Consideramos éxito si no hay cambios, pero se encontró
+                    print(f"Libro con Id '{Id_libro}' encontrado, pero no se realizaron cambios (los datos son los mismos).")
+                    return True # ConsIderamos éxito si no hay cambios, pero se encontró
             else:
-                print(f"No se encontró ningún libro con ID '{id_libro}'.")
+                print(f"No se encontró ningún libro con Id '{Id_libro}'.")
                 return False
 
         except Exception as e:
-            print(f"Ocurrió un error al actualizar el libro con ID '{id_libro}': {e}")
+            print(f"Ocurrió un error al actualizar el libro con Id '{Id_libro}': {e}")
             return False
 
     def buscarLibrosPorNombre(self, fragmento_nombre):
@@ -173,7 +173,7 @@ class LibroDAO:
             if libros_encontrados:
                 print(f"\n--- Libros encontrados con '{fragmento_nombre}' ---")
                 for libro in libros_encontrados:
-                    print(f"ID: {libro.get('ID', 'N/A')}")
+                    print(f"Id: {libro.get('Id', 'N/A')}")
                     print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
                     print(f"  Autor: {libro.get('Autor', 'N/A')}")
                     print(f"  Precio: ${libro.get('Precio', 'N/A')}")
@@ -190,4 +190,33 @@ class LibroDAO:
             print(f"Ocurrió un error al buscar libros por nombre: {e}")
             return []        
 
+    def buscarLibros(self, tipo, nombre):
+        """
+        Busca libros en la colección que contengan el fragmento_nombre
+        en su campo 'Nombre libro', ignorando mayúsculas y minúsculas.
+        """
+        try:
+            query = {tipo: {"$regex": re.compile(nombre, re.IGNORECASE)}}
+
+            libros_encontrados = list(self.collection.find(query))
+
+            if libros_encontrados:
+                print(f"\n--- Libros encontrados con '{nombre}' ---")
+                for libro in libros_encontrados:
+                    print(f"Id: {libro.get('Id', 'N/A')}")
+                    print(f"  Nombre: {libro.get('Nombre libro', 'N/A')}")
+                    print(f"  Autor: {libro.get('Autor', 'N/A')}")
+                    print(f"  Precio: ${libro.get('Precio', 'N/A')}")
+                    print(f"  Género: {libro.get('Genero', 'N/A')}")
+                    print(f"  Tapa: {libro.get('Tipo de tapa', 'N/A')}")
+                    print(f"  Páginas: {libro.get('Paginas', 'N/A')}")
+                    print(f"  Stock: {libro.get('Stock', 'N/A')}")
+                    print("-------------------------")
+                return libros_encontrados
+            else:
+                print(f"No se encontraron libros que contengan '{nombre}' en su nombre.")
+                return []
+        except Exception as e:
+            print(f"Ocurrió un error al buscar libros por nombre: {e}")
+            return []        
 

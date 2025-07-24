@@ -13,7 +13,7 @@ def get_int_input(prompt):
             value = int(input(prompt))
             return value
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número entero.")
+            print("Entrada inválIda. Por favor, ingrese un número entero.")
 
 def get_float_input(prompt):
     while True:
@@ -21,7 +21,7 @@ def get_float_input(prompt):
             value = float(input(prompt))
             return value
         except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número (decimal si es necesario).")
+            print("Entrada inválIda. Por favor, ingrese un número (decimal si es necesario).")
 
 
 # --- Funciones CRUD para Libros ---
@@ -34,12 +34,12 @@ def registrar_libro():
     precio = get_float_input("Ingrese el precio: $")
     genero = input("Ingrese el genero del libro: ").strip().capitalize()
     tipo_tapa = input("Ingrese el tipo de tapa (ej: Dura, Blanda): ").strip().capitalize()
-    paginas = get_int_input("Ingrese la cantidad de páginas: ")
+    paginas = get_int_input("Ingrese la cantIdad de páginas: ")
     autor = input("Ingrese el nombre del autor: ").strip().title()
-    stock = get_int_input("Ingrese la cantidad en stock: ")
+    stock = get_int_input("Ingrese la cantIdad en stock: ")
 
     if dao.agregarLibro(nombre, precio, genero, tipo_tapa, paginas, autor, stock):
-        print(f"Libro '{nombre}' registrado exitosamente con ID automático.")
+        print(f"Libro '{nombre}' registrado exitosamente con Id automático.")
     else:
         print(f"No se pudo registrar el libro '{nombre}'. Consulte los logs para más detalles.")
 
@@ -47,67 +47,79 @@ def listar_libros():
     dao = LibroDAO()
     dao.listarLibros()
 
-def buscar_libro():
-    print("\n--- Buscar Libros por Nombre ---")
-    dao = LibroDAO()
 
-    fragmento = input("Ingrese el nombre o fragmento del nombre del libro a buscar: ").strip()
+def buscar_libro():
+    print("\n--- Buscar Libros ---")
+    dao = LibroDAO()
+    print("Tipos de atributos:")
+    print("1.- Id")
+    print("2.- Nombre")
+    print("3.- Autor")
+    print("4.- Precio")
+    print("5.- Género")
+    print("6.- Tapa")
+    print("7.- Páginas")
+    tipo = input("Ingrese el nombre o fragmento del atributo del libro a buscar: ").strip().capitalize()
+    fragmento = input("Ingrese el nombre o fragmento del nombre del libro a buscar: ").strip().capitalize()
 
     if not fragmento:
         print("No se ingresó ningún fragmento para buscar.")
         return
+    if not tipo:
+        print("No se ingresó ningún tipo para buscar.")
+        return
 
-    libros = dao.buscarLibrosPorNombre(fragmento)
+    libros = dao.buscarLibros(tipo,fragmento)
     # El método buscarLibrosPorNombre ya imprime los resultados.
 
 def actualizar_libro():
     print("\n--- Editar Libro Completo ---")
     dao = LibroDAO()
 
-    id_a_editar = get_int_input("Ingrese el ID del libro que desea editar: ")
+    Id_a_editar = get_int_input("Ingrese el Id del libro que desea editar: ")
 
-    print(f"\nIngrese los NUEVOS datos para el libro con ID '{id_a_editar}':")
+    print(f"\nIngrese los NUEVOS datos para el libro con Id '{Id_a_editar}':")
 
     # Recopilar todos los nuevos datos
     nuevo_nombre = input("Ingrese el nuevo nombre del libro: ").strip().capitalize()
     nuevo_precio = get_float_input("Ingrese el nuevo precio: $")
     nuevo_genero = input("Ingrese el nuevo genero del libro: ").strip().capitalize()
     nuevo_tipo_tapa = input("Ingrese el nuevo tipo de tapa (ej: Dura, Blanda): ").strip().capitalize()
-    nuevas_paginas = get_int_input("Ingrese la nueva cantidad de páginas: ")
+    nuevas_paginas = get_int_input("Ingrese la nueva cantIdad de páginas: ")
     nuevo_autor = input("Ingrese el nuevo nombre del autor: ").strip().title()
-    nuevo_stock = get_int_input("Ingrese la nueva cantidad en stock: ")
+    nuevo_stock = get_int_input("Ingrese la nueva cantIdad en stock: ")
 
-    # Asegúrate de que las claves del diccionario coincidan EXACTAMENTE con los nombres de tus campos en MongoDB
+    # Asegúrate de que las claves del diccionario coincIdan EXACTAMENTE con los nombres de tus campos en MongoDB
     nuevos_datos = {
-        "Nombre libro": nuevo_nombre, # Corregido: "Nombre libro"
+        "Nombre": nuevo_nombre, # CorregIdo: "Nombre libro"
         "Precio": nuevo_precio,
         "Genero": nuevo_genero,
-        "Tipo de tapa": nuevo_tipo_tapa, # Corregido: "Tipo de tapa"
+        "Tapa": nuevo_tipo_tapa, # CorregIdo: "Tipo de tapa"
         "Paginas": nuevas_paginas,
         "Autor": nuevo_autor,
         "Stock": nuevo_stock
     }
 
-    if dao.actualizarLibro(id_a_editar, nuevos_datos):
-        print(f"Edición del libro con ID '{id_a_editar}' completada.")
+    if dao.actualizarLibro(Id_a_editar, nuevos_datos):
+        print(f"Edición del libro con Id '{Id_a_editar}' completada.")
     else:
-        print(f"No se pudo editar el libro con ID '{id_a_editar}'.")
+        print(f"No se pudo editar el libro con Id '{Id_a_editar}'.")
 
 # Se sacan estas funciones de eliminar_libro para poder llamarlas directamente desde el menú
-def eliminar_libro_id():
-    print("\n--- Eliminar Libro por ID ---")
+def eliminar_libro_Id():
+    print("\n--- Eliminar Libro por Id ---")
     dao = LibroDAO()
 
-    id_a_eliminar = get_int_input("Ingrese el ID del libro que desea eliminar: ")
+    Id_a_eliminar = get_int_input("Ingrese el Id del libro que desea eliminar: ")
 
-    confirmacion = input(f"¿Está seguro que desea eliminar el libro con ID '{id_a_eliminar}'? (s/n): ").lower().strip()
+    confirmacion = input(f"¿Está seguro que desea eliminar el libro con Id '{Id_a_eliminar}'? (s/n): ").lower().strip()
 
     if confirmacion == 's':
         # Asumo que tu DAO tiene un método eliminarLibro o eliminarLibroById
-        if dao.eliminarLibro(id_a_eliminar): # Usamos el nombre que ya se sugirió: eliminarLibro
-            print(f"Operación de eliminación para el libro con ID '{id_a_eliminar}' completada.")
+        if dao.eliminarLibroId(Id_a_eliminar): # Usamos el nombre que ya se sugirió: eliminarLibro
+            print(f"Operación de eliminación para el libro con Id '{Id_a_eliminar}' completada.")
         else:
-            print(f"No se pudo eliminar el libro con ID '{id_a_eliminar}'.")
+            print(f"No se pudo eliminar el libro con Id '{Id_a_eliminar}'.")
     else:
         print("Eliminación de libro cancelada.")
 
@@ -132,9 +144,9 @@ def eliminar_libro():
     """Función para elegir el método de eliminación de libros."""
     print("\n--- Eliminar Libro ---")
     while True:
-        op = input("Seleccione \n1.- Eliminar libro por ID \n2.- Eliminar libro por nombre \n3.- Volver al menú principal\nSu opción: ")
+        op = input("Seleccione \n1.- Eliminar libro por Id \n2.- Eliminar libro por nombre \n3.- Volver al menú principal\nSu opción: ")
         if op == '1':
-            eliminar_libro_id()
+            eliminar_libro_Id()
             break
         elif op == '2':
             eliminar_libro_nombre()
@@ -142,7 +154,7 @@ def eliminar_libro():
         elif op == '3':
             break
         else:
-            print("Opción no válida. Por favor, seleccione 1, 2 o 3.")
+            print("Opción no válIda. Por favor, seleccione 1, 2 o 3.")
 
 
 # --- Funciones CRUD para Usuarios ---
@@ -153,14 +165,14 @@ def registrar_usuario():
 
     usuario = input("Ingrese un nombre de usuario: ").strip().lower()
     nombre_u = input("Ingrese su nombre: ").strip().capitalize()
-    apellido_u = input("Ingrese su apellido: ").strip().capitalize()
+    apellIdo_u = input("Ingrese su apellIdo: ").strip().capitalize()
     email = input("Ingrese su Email: ").strip().lower()
     contraseña = input("Ingrese una contraseña: ") # Contraseña como string
     estado = True # Por defecto, un nuevo usuario está activo
 
     # Asumo que tu DAO tiene un método agregarUsuario con los parámetros correctos
-    if dao.agregarUsuario(usuario, nombre_u, apellido_u, email, contraseña, estado):
-        print(f"Usuario '{usuario}' registrado exitosamente con ID automático.")
+    if dao.agregarUsuario(usuario, nombre_u, apellIdo_u, email, contraseña, estado):
+        print(f"Usuario '{usuario}' registrado exitosamente con Id automático.")
     else:
         print(f"No se pudo registrar el usuario '{usuario}'. Consulte los logs para más detalles.")
 
@@ -169,29 +181,29 @@ def actualizar_usuario():
     dao = UsuarioDAO()
 
     # Se corrige el prompt para que sea de usuario, no de libro
-    id_a_editar = get_int_input("Ingrese el ID del usuario que desea editar: ")
+    Id_a_editar = get_int_input("Ingrese el Id del usuario que desea editar: ")
 
-    print(f"\nIngrese los NUEVOS datos para el usuario con ID '{id_a_editar}':")
+    print(f"\nIngrese los NUEVOS datos para el usuario con Id '{Id_a_editar}':")
 
-    nuevo_usuario = input("Ingrese un nuevo nombre de usuario: ").strip().lower() # Se usa .lower() para usuario
+    nuevo_usuario = input("Ingrese un nuevo nombre de usuario: ").strip().lower() 
     nuevo_nombre = input("Ingrese un nuevo nombre: ").strip().capitalize()
-    nuevo_apellido = input("Ingrese un nuevo apellido: ").strip().capitalize()
+    nuevo_apellIdo = input("Ingrese un nuevo apellIdo: ").strip().capitalize()
     nuevo_email = input("Ingrese el nuevo Email: ").strip().lower()
-    nueva_contraseña = input("Ingrese la nueva contraseña: ") # Contraseña como string
+    nueva_contraseña = input("Ingrese la nueva contraseña: ") 
 
     nuevos_datos = {
         "Usuario": nuevo_usuario,
         "Nombre": nuevo_nombre,
-        "Apellido": nuevo_apellido,
+        "ApellIdo": nuevo_apellIdo,
         "Email": nuevo_email,
         "Contraseña": nueva_contraseña
     }
 
     # Asegúrate de que tu UsuarioDAO tenga un método 'actualizarUsuario'
-    if dao.actualizarUsuario(id_a_editar, nuevos_datos):
-        print(f"Edición del usuario con ID '{id_a_editar}' completada.")
+    if dao.actualizarUsuario(Id_a_editar, nuevos_datos):
+        print(f"Edición del usuario con Id '{Id_a_editar}' completada.")
     else:
-        print(f"No se pudo editar el usuario con ID '{id_a_editar}'.")
+        print(f"No se pudo editar el usuario con Id '{Id_a_editar}'.")
 
 
 def listar_usuarios():
@@ -208,9 +220,9 @@ def eliminar_usuario():
     print("\n--- Desactivar/Eliminar Usuario (Cambiar Estado) ---")
     dao = UsuarioDAO() # ¡Correcto, usar UsuarioDAO aquí!
 
-    id_a_modificar = get_int_input("Ingrese el ID del usuario que desea desactivar/eliminar: ")
+    Id_a_modificar = get_int_input("Ingrese el Id del usuario que desea desactivar/eliminar: ")
 
-    confirmacion = input(f"¿Está seguro que desea DESACTIVAR el usuario con ID '{id_a_modificar}'? (s/n): ").lower().strip()
+    confirmacion = input(f"¿Está seguro que desea DESACTIVAR el usuario con Id '{Id_a_modificar}'? (s/n): ").lower().strip()
 
     if confirmacion == "s":
         # Cambiar el estado a False (desactivar)
@@ -219,10 +231,10 @@ def eliminar_usuario():
         }
 
         # Asumo que UsuarioDAO tiene un método actualizarUsuario
-        if dao.actualizarUsuario(id_a_modificar, cambio_estado): # Aquí usas actualizarUsuario
-            print(f"La cuenta con ID '{id_a_modificar}' ha sido desactivada correctamente.")
+        if dao.actualizarUsuario(Id_a_modificar, cambio_estado): # Aquí usas actualizarUsuario
+            print(f"La cuenta con Id '{Id_a_modificar}' ha sIdo desactivada correctamente.")
         else:
-            print(f"No se pudo desactivar la cuenta con ID '{id_a_modificar}'.")
+            print(f"No se pudo desactivar la cuenta con Id '{Id_a_modificar}'.")
     else:
         print("Operación de desactivación de cuenta cancelada.")
 
@@ -238,9 +250,9 @@ def mostrar_menu_principal():
     print("\n--- MENU PRINCIPAL ---")
     print(" 1.- Libros: Registrar")
     print(" 2.- Libros: Listar")
-    print(" 3.- Libros: Buscar por Nombre")
+    print(" 3.- Libros: Buscar")
     print(" 4.- Libros: Actualizar")
-    print(" 5.- Libros: Eliminar") # Ahora te permite elegir ID o Nombre
+    print(" 5.- Libros: Eliminar") # Ahora te permite elegir Id o Nombre
     print("-------------------------")
     print(" 6.- Usuarios: Registrar")
     print(" 7.- Usuarios: Listar Activos")
@@ -265,7 +277,7 @@ def main():
         elif opcion == '4':
             actualizar_libro()
         elif opcion == '5':
-            eliminar_libro() # Llama a la función que te da a elegir ID o Nombre
+            eliminar_libro() # Llama a la función que te da a elegir Id o Nombre
         elif opcion == '6':
             registrar_usuario()
         elif opcion == '7':
@@ -280,7 +292,7 @@ def main():
             print("¡Gracias por usar la tienda de libros online! ¡Hasta pronto!")
             break
         else:
-            print("Opción no válida. Por favor, intente de nuevo.")
+            print("Opción no válIda. Por favor, intente de nuevo.")
 
 if __name__ == "__main__":
     main()

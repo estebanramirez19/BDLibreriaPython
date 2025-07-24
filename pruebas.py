@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError # Importar la clase base de errores de PyMongo
-# Asegúrate de importar tu clase Conexion desde donde la tengas definida
+# Asegúrate de importar tu clase Conexion desde donde la tengas definIda
 # from .conexion import Conexion # Si está en un archivo diferente, por ejemplo
 
 # **Asumiendo que tu clase Conexion es similar a esta (con mejoras previas):**
@@ -15,7 +15,7 @@ class Conexion:
         try:
             # Asegúrate de que tu URI de conexión sea correcta y segura
             self.client = MongoClient("mongodb+srv://esteban:Earg241690@cluster0.8y7ebgm.mongodb.net/?retryWrites=true&w=majority")
-            self.client.admin.command('ping') # Verifica la conexión al servidor
+            self.client.admin.command('ping') # Verifica la conexión al servIdor
             self.db = self.client[self.db_name] # Selecciona la base de datos
             print(f"Conexión exitosa a la base de datos '{self.db_name}'")
         except PyMongoError as err: # Captura errores específicos de PyMongo
@@ -44,34 +44,34 @@ class Conexion:
             print("La conexión se ha cerrado con éxito.")
 
 
-# **Clase AutorDAO corregida:**
+# **Clase AutorDAO corregIda:**
 class AutorDAO:
     def __init__(self):
         self.conn = Conexion() # Instancia de tu clase de conexión
         self.collection = self.conn.obtenerConexion()["autores"] # Accede a la colección 'autores'
 
-    def agregarAutor(self, id_autor, nombre_autor):
+    def agregarAutor(self, Id_autor, nombre_autor):
         try:
             # 1. Preparar el documento a insertar como un diccionario Python
-            # Es buena práctica dejar que MongoDB genere el _id, o usar ObjectId para el id.
-            # Si 'id_autor' es un ID que tú manejas y quieres usarlo como _id:
-            # document = {"_id": id_autor, "nombre_autor": nombre_autor}
-            # Si quieres un ID generado por ti y un _id autogenerado por MongoDB:
-            document = {"id_autor": id_autor, "nombre_autor": nombre_autor}
+            # Es buena práctica dejar que MongoDB genere el _Id, o usar ObjectId para el Id.
+            # Si 'Id_autor' es un Id que tú manejas y quieres usarlo como _Id:
+            # document = {"_Id": Id_autor, "nombre_autor": nombre_autor}
+            # Si quieres un Id generado por ti y un _Id autogenerado por MongoDB:
+            document = {"Id_autor": Id_autor, "nombre_autor": nombre_autor}
 
             # 2. Insertar el documento en la colección
             result = self.collection.insert_one(document)
 
             # 3. Verificar el resultado de la inserción
-            if result.inserted_id:
-                print(f"Autor '{nombre_autor}' con ID '{id_autor}' agregado correctamente. MongoDB _id: {result.inserted_id}")
+            if result.inserted_Id:
+                print(f"Autor '{nombre_autor}' con Id '{Id_autor}' agregado correctamente. MongoDB _Id: {result.inserted_Id}")
                 return True # Indica éxito
             else:
-                print(f"Error desconocido al agregar el autor '{nombre_autor}'.")
+                print(f"Error desconocIdo al agregar el autor '{nombre_autor}'.")
                 return False # Indica fallo
 
         except PyMongoError as ex:
-            # Captura errores específicos de PyMongo (ej. duplicados si usas _id)
+            # Captura errores específicos de PyMongo (ej. duplicados si usas _Id)
             print(f"Error de PyMongo al agregar autor: {ex}")
             return False
         except Exception as ex:
@@ -95,8 +95,8 @@ if __name__ == "__main__":
     dao.agregarAutor(2, "Isabel Allende")
     dao.agregarAutor(3, "Jorge Luis Borges")
 
-    # Intentar agregar un autor con el mismo ID si "_id" se usa como clave primaria y es único
-    # Si "id_autor" es solo un campo más, se puede duplicar.
+    # Intentar agregar un autor con el mismo Id si "_Id" se usa como clave primaria y es único
+    # Si "Id_autor" es solo un campo más, se puede duplicar.
     dao.agregarAutor(1, "Nuevo Gabriel Garcia Marquez")
 
     # Aquí puedes agregar métodos para consultar, actualizar, eliminar, etc.
